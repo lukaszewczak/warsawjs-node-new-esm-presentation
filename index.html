@@ -1,353 +1,289 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Nowa implementacja modułów ECMAScript w Node.js</title>
 
-    <meta charset="utf-8" />
-    <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <meta name="viewport" content="width=device-width" />
-    <link href="images/icons/warsawjs-logo-transparent-32x32.png" rel="icon" type="image/png" sizes="32x32" />
+<head>
+  <title>Nowa implementacja modułów ECMAScript w Node.js</title>
 
-    <link href="https://fonts.googleapis.com/css?family=Fira+Sans:400,900&amp;subset=latin-ext" rel="stylesheet" />
+  <meta charset="utf-8" />
+  <meta http-equiv="x-ua-compatible" content="ie=edge" />
+  <meta name="viewport" content="width=device-width" />
+  <link href="images/icons/warsawjs-logo-transparent-32x32.png" rel="icon" type="image/png" sizes="32x32" />
 
-    <!-- Shower Theme -->
-    <link rel="stylesheet" href="vendors/shower-ribbon/styles/screen-16x9.css" />
-    <link rel="stylesheet" href="vendors/shower-warsawjs/styles/main.css" />
+  <link href="https://fonts.googleapis.com/css?family=Fira+Sans:400,900&amp;subset=latin-ext" rel="stylesheet" />
 
-    <!-- Prism.js -->
-    <link rel="stylesheet" href="vendors/prism/prism.css" />
-    <link rel="stylesheet" href="vendors/prism/custom-prism.css" />
-  </head>
-  <body class="shower list">
-    <header class="caption">
-      <h1>Nowa implementacja modułów ECMAScript w Node.js [PL]</h1>
-      <p>We talk about JavaScript. Each month in Warsaw, Poland.</p>
-    </header>
+  <!-- Shower Theme -->
+  <link rel="stylesheet" href="vendors/shower-ribbon/styles/screen-16x9.css" />
+  <link rel="stylesheet" href="vendors/shower-warsawjs/styles/main.css" />
 
-    <section class="slide front-page">
-      <div class="logo">
-        <!-- Logo WarsawJS -->
-        <img src="vendors/shower-warsawjs/images/logo.svg" width="350" alt="" />
-      </div>
-      <div class="details">
-        <!-- 1. Avatar -->
-        <img src="images/my-avatar.jpg" alt="Speaker" />
+  <!-- Prism.js -->
+  <link rel="stylesheet" href="vendors/prism/prism.css" />
+  <link rel="stylesheet" href="vendors/prism/custom-prism.css" />
+</head>
 
-        <!-- 2. Speaker -->
-        <h2>Łukasz Szewczak</h2>
+<body class="shower list">
+  <header class="caption">
+    <h1>Nowa implementacja modułów ECMAScript w Node.js [PL]</h1>
+    <p>We talk about JavaScript. Each month in Warsaw, Poland.</p>
+  </header>
 
-        <!-- 3. Presentation title -->
-        <h2><strong>Nowa implementacja modułów ECMAScript w Node.js [PL]</strong></h2>
+  <section class="slide front-page">
+    <div class="logo">
+      <!-- Logo WarsawJS -->
+      <img src="vendors/shower-warsawjs/images/logo.svg" width="350" alt="" />
+    </div>
+    <div class="details">
+      <!-- 1. Avatar -->
+      <img src="images/my-avatar.jpg" alt="Speaker" />
 
-        <!-- 4. Presentation date -->
-        <h2>2019-04-10</h2>
+      <!-- 2. Speaker -->
+      <h2>Łukasz Szewczak</h2>
 
-        <!-- 5. Contact the speaker -->
-        <h2><a href="https://twitter.com/lukaszewczak">@lukaszewczak</a></h2>
-      </div>
-    </section>
+      <!-- 3. Presentation title -->
+      <h2><strong>Nowa implementacja modułów ECMAScript w Node.js [PL]</strong></h2>
 
-    <section class="slide compact">
-      <h2>List Navigation</h2>
-      <ol>
-        <li>Ennui keffiyeh thundercats</li>
-        <li class="next">Jean shorts biodiesel</li>
-        <li class="next">Terry richardson, swag blog</li>
-        <li class="next">Locavore umami vegan helvetica</li>
-        <li class="next">Fingerstache kale chips</li>
-      </ol>
-      <p class="next">Before they sold out master</p>
-    </section>
+      <!-- 4. Presentation date -->
+      <h2>2019-04-10</h2>
 
-    <section class="slide compact">
-      <h2>Slide Header</h2>
+      <!-- 5. Contact the speaker -->
+      <h2><a href="https://twitter.com/lukaszewczak">@lukaszewczak</a></h2>
+    </div>
+  </section>
 
-      <p>
-        Echo Park 8-bit sustainable umami deep v Kickstarter. DIY cliche typewriter brunch, Odd Future sriracha pickled
-        aesthetic. Farm-to-table bespoke fingerstache, kale chips umami brunch letterpress.
-      </p>
-      <p>
-        Whatever authentic disrupt, you probably haven't heard of them direct trade mlkshk Etsy. Gluten-free roof party
-        plaid four loko quinoa.
-      </p>
-      <p class="note">Echo Park 8-bit sustainable umami deep v Kickstarter.</p>
-    </section>
+  <section class="slide compact prims">
+    <h2>Stan użycia modułów ECMAScript</h2>
+    <ol class="next">
+      <li>
+        Obecnie wszystkie główne przeglądarki wspierają moduły ECMAScript poprzez
+        <code>&lt;script type=”module"&gt;</code>
+      </li>
+      <li class="next">
+        Użycie składni modułów ES jest coraz powszechniejsze dzięki np. babel czy typescript
+        <pre style="font-size:21px;" class="language-javascript line-numbers">
+          <code>
+            import {meetup, workshop} from './warsaw.mjs';                
+            export const events = [meetup.getNextEvent(), workshop.getNextEvent()];
+          </code>
+        </pre>
+      </li>
+      <li class="next">W rejestrze npm coraz częściej możemy spotkać pakiety używające modułów ES</li>
+    </ol>
+  </section>
 
-    <section class="slide compact">
-      <h2>Inline Elements</h2>
+  <section class="slide compact">
+    <h2>Stan ECMASCript module w Node.js</h2>
+    <p class="next">
+      Od października 2017 wraz z wersją LTS <b>8.9.0</b> roku mamy eksperymentalne wsparcie modułów ECMAScript za flagą
+      <mark>--expermintal-modules</mark>
+    </p>
+    <p class="next">
+      <b>1 lutego 2018</b> została utworzona dedykowana <a href="https://github.com/nodejs/modules">grupa robocza</a>
+      której celem było dostarczenie pełnego wsparcia dla modułów ES w Node.js
+    </p>
+    <p class="next">
+      Ich praca doprowadziła do utworzenia <a
+        href="https://github.com/nodejs/modules/blob/master/doc/plan-for-new-modules-implementation.md">road mapy</a>
+      dla implementacji modułów ES w Node.js
+    </p>
+  </section>
 
-      <p>
-        Retro meh brunch <a href="">aesthetic</a> Cosby sweater Shoreditch. Banksy Tumblr <strong>sriracha</strong>,
-        flexitarian pug chia master cleanse vinyl <em>wayfarers</em> fanny pack bespoke Helvetica <b>roof</b> party.
-        Messenger bag retro cred <i>Portland</i> next level. Yr stumptown Schlitz Carles deep v small batch. Hella
-        sustainable messenger bag,
-        <mark>leggings</mark>
-        skateboard literally<sup>1</sup> bicycle rights H<sub>2</sub>0 mumblecore banh mi DIY VHS. Semiotics four loko
-        street art asymmetrical. Asymmetrical <code>&lt;paleo&gt;</code> you probably haven’t heard of.
-      </p>
+  <section class="slide compact">
+    <img class="cover" src="images/plan-for-new-modules-mark.png" alt="" />
+  </section>
 
-      <footer class="footer">
-        <p>
-          Retro meh brunch <a href="">aesthetic</a> Cosby sweater Shoreditch. Banksy Tumblr <strong>sriracha</strong>,
-          flexitarian pug chia master cleanse vinyl <em>wayfarers</em> fanny pack bespoke Helvetica <b>roof</b> party.
-          Messenger bag retro cred <i>Portland</i> next level. Yr stumptown Schlitz Carles deep v small batch. Hella
-          sustainable messenger bag,
-          <mark>leggings</mark>
-          skateboard literally<sup>1</sup> bicycle rights H<sub>2</sub>0 mumblecore banh mi DIY VHS. Semiotics four loko
-          street art asymmetrical. Asymmetrical <code>&lt;paleo&gt;</code> you probably haven’t heard of.
-        </p>
-      </footer>
-    </section>
+  <section class="slide compact">
+    <h2>Zakończenie fazy 2</h2>
+    <img class="bottom" src="images/end-of-phase-2.png" alt="" />
+  </section>
 
-    <section class="slide compact">
-      <h2>Columns</h2>
-      <p class="double">
-        Echo Park 8-bit sustainable umami deep v Kickstarter. DIY cliche typewriter brunch, Odd Future sriracha pickled
-        aesthetic. Farm-to-table bespoke fingerstache, kale chips umami brunch American Apparel letterpress. Whatever
-        authentic disrupt, you probably haven't heard of them direct trade mlkshk Etsy. Gluten-free roof party plaid
-        American Apparel four loko quinoa. Echo Park 8-bit sustainable.
-      </p>
-    </section>
+  <section class="slide">
+    <h2>Co jest w <mark>--experimental-modules</mark>?</h2>
+    <p class="next">Tak jak w poprzedniej wersji flaga <mark>--experimental-modules</mark> dodaje wsparcie do Node.js,
+      dla następujących elementów:</p>
+  </section>
 
-    <section class="slide">
-      <h2>Quotes</h2>
-      <blockquote>
-        <p>
-          Flannel bicycle rights locavore selfies skateboard. Authentic fanny pack paleo four loko bespoke. Artisan
-          tattooed chia XOXO ennui, lomo disrupt 8-bit art party Tumblr scenester.
-        </p>
-      </blockquote>
-      <figure>
-        <blockquote>
-          <p>
-            Post-ironic fashion axe flexitarian, Tonx narwhal messenger bag Tumblr. Portland gentrify deep v kale chips
-            literally.
-          </p>
-        </blockquote>
-        <figcaption>Yours Truly</figcaption>
-      </figure>
-    </section>
+  <section class="slide compact prism">
+    <p>Cztery typy specyfikatorów używanych w instrukcjach <code>import</code>,<code>export from</code> i dynamicznych
+      wyrażeniach <code>import()</code></p>
+    <ul class="next">
+      <li>
+        Względne adresy URL: <code>import { event } from './meetup.mjs'</code>
+      </li>
+      <li class="next">
+        Pełne adresy URL: <code>import { event } from 'file://opt/app/meetup.mjs'</code>
+      </li>
+      <li class="next">
+        Nazwy pakietów: <code>import { event } from 'es-module-package'</code>
+      </li>
+      <li class="next">
+        Ścieżki w pakietach: <br />
+        <code>import { event } from 'es-module-package/lib/file.mjs'</code>
+      </li>
+    </ul>
+  </section>
 
-    <section class="slide compact">
-      <h2>Nested Lists</h2>
-      <ol>
-        <li>Literally viral vegan, ugh drinking vinegar photo booth</li>
-        <li>Wes Anderson chillwave Marfa pour-over Etsy banh mi</li>
-        <li>
-          Ethnic polaroid lo-fi iPhone ennui
-          <ul>
-            <li>Yr wayfarers before they sold out Kickstarter asymmetrical</li>
-            <li>Irony flexitarian readymade quinoa, kogi bespoke meggings narwhal</li>
-            <li>Skateboard Etsy twee artisan Echo Park</li>
-          </ul>
+  <section class="slide compact prism">
+    <p>Instrukcja <code>import</code>, odwołująca się do pliku modułu ECMASCript, może określić zarówno:</p>
+    <ul class="next">
+      <li>
+        Domyślny eksport: <code>import _ from './meetup.mjs'</code>
+      </li>
+      <li class="next">
+        Nazwany eksport: <code>import { shuffle } from 'es-module-package'</code>
+      </li>
+      <li class="next">
+        Eksport przestrzeni nazw: <code>import * as fs from 'fs'</code>
+      </li>
+    </ul>
+    <p class="note next">Wszystkie wbudowane moduły <mark>Node.js</mark> jak <mark>fs</mark> czy <mark>path</mark>
+      obsługują wszystkie trzy typy eksportu.</p>
+  </section>
+
+  <section class="slide compact prism">
+    <p>Instrukcje <code>import</code> odwołujące się do pliku <mark>CommonJS</mark> mogą używać tylko domyślnego ekportu
+    </p>
+    <pre class="language-javascript"><code>import _ from 'commonjs-package'</code></pre>
+    <p class="note next">To jest w toku i może się zmienić w przyszłości.</p>
+  </section>
+
+  <section class="slide compact prism">
+    <p>Dynamiczne wyrażenie <code>import()</code> może być używane do importowania <mark>modułów ES</mark>
+      z plików <mark>modułu CommonJS</mark> lub <mark>ES</mark></p>
+    <pre class="language-javascript">
+      <code>
+          (async () => {
+            // Załaduj moduł ECMASCript
+            const meetupES = await import('./meetup.mjs');
+            console.log(meetupES.default.name);          
+            // Załaduj moduł CommonJS
+            const meetupCJS = await import('./meetup.js');
+            console.log(meetupCJS.default.name);
+          })();    
+      </code>
+    </pre>
+  </section>
+
+  <section class="slide compact prism">
+    <p>
+      <code>import.meta.url</code> dostarcza adres URL bieżącego modułu ES
+    </p>
+    <pre class="language-javascript">
+      <code>
+          console.log(import.meta.url);
+          // Wynik => file:///C:/Projekty/warsaw.js-new-esm/index.mjs
+      </code>
+    </pre>
+  </section>
+
+  <section class="slide compact">
+    <p><mark>Moduły ECMASCript</mark> ładowane są w trybie ścisłym, gdzie <mark>CommonJS</mark> wymaga
+      dodania dyrektywy <code>“use strict”</code></p>
+    <p class="next">
+      Pliki kończące się na <mark>.mjs</mark> są jawnie traktowane jako <mark>moduły ECMASCript</mark>
+      w instrukcjach <b>importu</b> i podczas uruchamiania za pomocą komendy <b>node</b>.
+    </p>
+  </section>
+
+  <section class="slide">
+    <h2 class="shout">A co jest nowego?</h2>
+  </section>
+
+  <section class="slide">
+    <h2 class="shout grow">Składnia <b>import</b> i <b>export</b> w plikach <b>.js</b></h2>
+  </section>
+
+
+  <section class="slide compact">
+    <h2>Składnia <b>import</b> i <b>export</b> w plikach <b>.js</b></h2>
+    <p>Nowa implementacja modułów ES umożliwia nam to poprzez pole <mark>type</mark> w pliku <mark>package.json</mark>.
+    </p>
+    <p class="next">
+      Dodaj <code>"type": "module"</code> do pliku <mark>package.json</mark> dla swojego projektu a Node.js
+      będzie traktował wszystkie pliki <mark>js</mark> w Twoim projekcie jako moduły ECMAScript.
+    </p>
+  </section>
+
+  <section class="slide compact">
+    <img class="cover" src="images/run-js.png" alt="" />
+  </section>
+
+  <section class="slide compact">
+    <h2>A co z plikami CommonJS?</h2>
+    <p class="next">Jeżeli część Twoich plików używa <mark>CommonJS</mark> i nie jesteś w stanie przepisać wszystkich
+      naraz, masz dwa
+      wyjścia:
+    </p>
+    <ul class="next">
+      <li>możesz nadać im rozszerznie <mark>cjs</mark></li>
+      <li class="next">lub umieścić je w subfolderze zawierającym plik <mark>package.json</mark> z polem
+        <code>"type":"commonjs"</code> pod którym wszystkie pliki <mark>js</mark> będą traktowane jak
+        <mark>CommonJS</mark>
+      </li>
+    </ul>
+  </section>
+
+  <section class="slide compact">
+    <img class="cover" src="images/esm-commonjs.png" alt="" />
+  </section>
+
+  <section class="slide compact">
+    <h2>Rozszerzenie <mark>.cjs</mark></h2>
+    <p class="next">
+      Nowe rozszerzenie pliku <mark>.cjs</mark> jawnie oznacza, że ​​plik powinien być traktowany jako
+      <mark>CommonJS</mark>.
+    </p>
+  </section>
+
+  <section class="slide compact">
+    <h2>Obowiązkowe rozszerzenia plików</h2>
+    <p class="next">
+      Domyślnie w nowej implementacji modułów rozszerzenia plików są obowiązkowe w instrukcjach <mark>importu</mark>:
+      <ul class="next">
+        <li>Należy pisać: <code>import './file.js'</code>, zamiast <code>import './file'</code></li>
+      </ul>
+    </p>
+    <p class="next">A mając katalog <mark>config/index.js</mark>:
+      <ul class="next">
+        <li>Należy pisać: <code>import './config/index.js'</code>, zamiast <code>import './config'</code></li>
+      </ul>
+    </p>
+    <p class="note next">Ale, możemy zmienić to zachowanie korzystają z ...</p>
+  </section>
+
+  <section class="slide compact">
+    <p>Flaga <mark>--es-module-specifier-resolution=node</mark></p>
+    <p class="next">
+      Flaga włącza zachowanie automatycznego rozszerzania w stylu <mark>CommonJS</mark>, dzięki czemu poniższy kod jest
+      poprawny.
+      <ul class="next">
+        <li><code>import './file'</code></li>
+        <li><code>import './config'</code> - gdzie <mark>config</mark> jest katalogiem z plikiem <mark>index.js</mark>
         </li>
-        <li>Tonx kitsch fingerstache readymade, retro single-origin coffee</li>
-      </ol>
-    </section>
+      </ul>
+    </p>
+  </section>
 
-    <section class="slide compact">
-      <h2>Simple Table</h2>
-      <table>
-        <tr>
-          <th scope="col">Gentrify</th>
-          <th>Twee</th>
-          <th>Artisan</th>
-          <th>Banksy</th>
-        </tr>
-        <tr>
-          <th scope="row">Messenger</th>
-          <td>Mixtape</td>
-          <td>Small batch</td>
-          <td>Bicycle rights</td>
-        </tr>
-        <tr>
-          <th scope="row">Meggings</th>
-          <td>Freegan</td>
-          <td>Retro biodiesel</td>
-          <td>Slow-carb</td>
-        </tr>
-        <tr>
-          <th scope="row">Vegan</th>
-          <td>Occupy</td>
-          <td>Normcore</td>
-          <td>Put a bird on it</td>
-        </tr>
-        <tr>
-          <th scope="row">Next level</th>
-          <td>Selfies</td>
-          <td>Sustainable</td>
-          <td>Organic</td>
-        </tr>
-        <tr>
-          <th scope="row">Umami</th>
-          <td>Asymmetrical</td>
-          <td>Keytar</td>
-          <td>Craft beer</td>
-        </tr>
-        <tr>
-          <th scope="row">Biodiesel</th>
-          <td>Haven’t heard</td>
-          <td>Skateboard</td>
-          <td>Farm-to-table</td>
-        </tr>
-      </table>
-    </section>
+  <section class="slide">
+    <h3 class="shout">See you next month at WarsawJS</h3>
+  </section>
 
-    <section class="slide compact">
-      <h2>Striped Table</h2>
-      <table class="striped">
-        <tr>
-          <th scope="col">Gentrify</th>
-          <th>Twee</th>
-          <th>Artisan</th>
-          <th>Banksy</th>
-        </tr>
-        <tr>
-          <th scope="row">Messenger</th>
-          <td>Mixtape</td>
-          <td>Small batch</td>
-          <td>Bicycle rights</td>
-        </tr>
-        <tr>
-          <th scope="row">Meggings</th>
-          <td>Freegan</td>
-          <td>Retro biodiesel</td>
-          <td>Slow-carb</td>
-        </tr>
-        <tr>
-          <th scope="row">Vegan</th>
-          <td>Occupy</td>
-          <td>Normcore</td>
-          <td>Put a bird on it</td>
-        </tr>
-        <tr>
-          <th scope="row">Next level</th>
-          <td>Selfies</td>
-          <td>Sustainable</td>
-          <td>Organic</td>
-        </tr>
-        <tr>
-          <th scope="row">Umami</th>
-          <td>Asymmetrical</td>
-          <td>Keytar</td>
-          <td>Craft beer</td>
-        </tr>
-        <tr>
-          <th scope="row">Biodiesel</th>
-          <td>Haven’t heard</td>
-          <td>Skateboard</td>
-          <td>Farm-to-table</td>
-        </tr>
-      </table>
-    </section>
+  <div class="progress"></div>
 
-    <section class="slide prism">
-      <h2>Listing Slide</h2>
+  <footer class="badge">
+    <a href="https://github.com/lukaszewczak/warsawjs-node-new-esm-presentation">Fork me on GitHub</a>
+  </footer>
 
-      <pre style="font-size: 45px;" class="language-javascript line-numbers">
-            <code>
-                function wrap(value) {
-                    return function () {
-                        return value;
-                    }
-                }
+  <footer class="badge badge-top-left">
+    <a href="#" class="fullscreen">Fullscreen</a>
+  </footer>
 
-                function bind(monad, f) {
-                    return f(monad());
-                }
-            </code>
-        </pre>
-    </section>
+  <script src="vendors/gamepad/gamepad.js"></script>
+  <script src="vendors/shower/shower.min.js"></script>
+  <script src="vendors/shower-gamepad/shower.gamepad.js"></script>
+  <script src="vendors/shower-warsawjs/scripts/fullscreen.js"></script>
 
-    <section class="slide prism">
-      <pre style="font-size: 30px;" class="language-javascript line-numbers">
-            <code>
-                var monad = wrap('cookie');
-                bind(monad, (value) => {
-                    console.info(value);
-                    return wrap(value);
-                });
-                monad = bind(monad, (value) => {
-                    return wrap({ type: value });
-                });
-                bind(monad, (value) => {
-                    console.log(value);
-                    return wrap(value);
-                });
-            </code>
-        </pre>
-    </section>
+  <!-- Prism.js -->
+  <script src="vendors/prism/prism.js"></script>
+  <script src="vendors/prism/custom-prism.js"></script>
+</body>
 
-    <section class="slide">
-      <h2 class="shout"><a href="">Linked</a> Shout</h2>
-    </section>
-
-    <section class="slide">
-      <h2 class="shout grow">Effect: Growing Shout</h2>
-    </section>
-
-    <section class="slide">
-      <h2 class="shout shrink">Effect: Shrinking Shout</h2>
-    </section>
-
-    <section class="slide">
-      <figure>
-        <img class="cover" src="vendors/shower-ribbon/pictures/exact.png" alt="" />
-        <figcaption class="white">Copyright © 2016 <a href="">Yours Truly</a>, Famous Inc.</figcaption>
-      </figure>
-    </section>
-
-    <section class="slide">
-      <img class="cover" src="vendors/shower-ribbon/pictures/tall.png" alt="" />
-    </section>
-
-    <section class="slide">
-      <img class="cover" src="vendors/shower-ribbon/pictures/wide.png" alt="" />
-    </section>
-
-    <section class="slide white">
-      <img class="place top left" src="vendors/shower-ribbon/pictures/square.png" alt="" />
-      <img class="place top" src="vendors/shower-ribbon/pictures/square.png" alt="" />
-      <img class="place top right" src="vendors/shower-ribbon/pictures/square.png" alt="" />
-
-      <img class="place left" src="vendors/shower-ribbon/pictures/square.png" alt="" />
-      <img class="place" src="vendors/shower-ribbon/pictures/square.png" alt="" />
-      <img class="place right" src="vendors/shower-ribbon/pictures/square.png" alt="" />
-
-      <img class="place bottom left" src="vendors/shower-ribbon/pictures/square.png" alt="" />
-      <img class="place bottom" src="vendors/shower-ribbon/pictures/square.png" alt="" />
-      <img class="place bottom right" src="vendors/shower-ribbon/pictures/square.png" alt="" />
-    </section>
-
-    <section class="slide" data-timing="00:03">
-      <h3 class="shout">Automatic switch slide after <strong>3 secs</strong> ...</h3>
-    </section>
-
-    <section class="slide">
-      <img class="cover" src="images/gifs/example-gif.gif" width="480" height="360" alt="" />
-    </section>
-
-    <section class="slide">
-      <h3 class="shout">See you next month at WarsawJS</h3>
-    </section>
-
-    <div class="progress"></div>
-
-    <footer class="badge">
-      <a href="https://github.com/lukaszewczak/warsawjs-node-new-esm-presentation">Fork me on GitHub</a>
-    </footer>
-
-    <footer class="badge badge-top-left">
-      <a href="#" class="fullscreen">Fullscreen</a>
-    </footer>
-
-    <script src="vendors/gamepad/gamepad.js"></script>
-    <script src="vendors/shower/shower.min.js"></script>
-    <script src="vendors/shower-gamepad/shower.gamepad.js"></script>
-    <script src="vendors/shower-warsawjs/scripts/fullscreen.js"></script>
-
-    <!-- Prism.js -->
-    <script src="vendors/prism/prism.js"></script>
-    <script src="vendors/prism/custom-prism.js"></script>
-  </body>
 </html>
