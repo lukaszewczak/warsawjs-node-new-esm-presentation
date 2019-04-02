@@ -246,7 +246,7 @@
         <li>Należy pisać: <code>import './config/index.js'</code>, zamiast <code>import './config'</code></li>
       </ul>
     </p>
-    <p class="note next">Ale, możemy zmienić to zachowanie korzystają z ...</p>
+    <p class="note next">Ale, możemy zmienić to zachowanie korzystając z ...</p>
   </section>
 
   <section class="slide compact">
@@ -260,6 +260,66 @@
         </li>
       </ul>
     </p>
+  </section>
+
+  <section class="slide compact">
+    <h2>Składnia <b>import</b> tylko dla plików JavaScript</h2>
+    <p class="next">
+      Poprzednia implementacja pozwalała używać instrukcji <code>import</code> względem plików
+      <mark>JSON</mark> i <mark>natywnych modułów</mark>. Ta funkcjonalność została zdjęta. Aby
+      zaimportować te typu plików w module ECMASCript można użyć:
+    </p>
+
+    <ul class="next">
+      <li>dla plików <mark>JSON</mark> i <mark>natywnych modułow</mark> - <code>module.createRequireFromPath()</code>
+      </li>
+      <li>tylko dla plików <mark>JSON</mark> mamy ekperymentalne wsparcie po przez flagę
+        <mark>--experimental-json-modules</mark></li>
+    </ul>
+  </section>
+
+  <section class="slide compact prism">
+    <p>Użycie plików <mark>CommonJS</mark>, <mark>JSON</mark> oraz <mark>natywnych modułów</mark> po przez
+      <code>module.createRequireFromPath()</code></p>
+    <pre class="language-javascript">
+        <code>
+            import { createRequireFromPath as createRequire } from 'module';
+            import { fileURLToPath as fromURL } from 'url';
+            
+            const require = createRequire(fromURL(import.meta.url));
+            
+            const packageConfig = require('./package.json');
+            console.log(packageConfig); // { type: 'module' }
+
+
+
+            //
+        </code>
+      </pre>
+  </section>
+
+  <section class="slide compact prism">
+    <p>Użycie flagi <mark>--experimental-json-modules</mark></p>
+    <img class="cover" src="images/import-json.png" alt="" />
+  </section>
+
+  <section class="slide compact">
+    <h2>Kod modułu ECMASCript w pakietach</h2>
+    <p class="note">To jest praca w toku i może ulec zmianie.</p>
+    <p class="next">
+      Możemy utworzyć pakiet zawierający pliki ECMASCript, używając pola <mark>"main"</mark>
+      w pliku <mark>package.json</mark>.
+    </p>
+    <p class="next">
+      Node.js będzie wiedział, jak załadować go jako moduł ECMASCript,
+      jeśli plik kończy się na <mark>.mjs</mark> lub jeśli <mark>package.json</mark>
+      zawiera także <code>"type": "module"</code>
+    </p>
+
+  </section>
+
+  <section class="slide compact prism">
+    <img class="cover" src="images/run-es-package.png" alt="" />
   </section>
 
   <section class="slide">
