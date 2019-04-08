@@ -49,24 +49,24 @@
     </div>
   </section>
 
-  <section class="slide compact prims">
+  <section class="slide compact prism">
     <h2>Stan użycia modułów ECMAScript</h2>
-    <ol class="next">
-      <li>
-        Obecnie wszystkie główne przeglądarki wspierają moduły ECMAScript poprzez
-        <code>&lt;script type=”module"&gt;</code>
-      </li>
-      <li class="next">
-        Użycie składni modułów ES jest coraz powszechniejsze dzięki np. babel czy typescript
-        <pre style="font-size:21px;" class="language-javascript line-numbers">
+
+    <p class="next">
+      Obecnie wszystkie główne przeglądarki wspierają moduły ECMAScript poprzez
+      <code>&lt;script type=”module"&gt;</code>
+    </p>
+    <p class="next">
+      Użycie składni modułów ES jest coraz powszechniejsze dzięki np. <mark>Babel</mark> czy <mark>Typescript</mark>
+      <pre class="language-javascript next" style="overflow: hidden;">
           <code>
-            import {meetup, workshop} from './warsaw.mjs';                
-            export const events = [meetup.getNextEvent(), workshop.getNextEvent()];
+            import {meetup} from './warsaw.mjs';
+            export const events = meetup.getNextEvents();
           </code>
         </pre>
-      </li>
-      <li class="next">W rejestrze npm coraz częściej możemy spotkać pakiety używające modułów ES</li>
-    </ol>
+    </p>
+    <p class="next">W rejestrze <mark>npm</mark> coraz częściej możemy spotkać pakiety używające modułów ES</p>
+
   </section>
 
   <section class="slide compact">
@@ -106,7 +106,7 @@
       wyrażeniach <code>import()</code></p>
     <ul class="next">
       <li>
-        Względne adresy URL: <code>import { event } from './meetup.mjs'</code>
+        Względne adresy URL:<code>import { event } from './meetup.mjs'</code>
       </li>
       <li class="next">
         Pełne adresy URL: <code>import { event } from 'file://opt/app/meetup.mjs'</code>
@@ -139,16 +139,17 @@
   </section>
 
   <section class="slide compact prism">
-    <p>Instrukcje <code>import</code> odwołujące się do pliku <mark>CommonJS</mark> mogą używać tylko domyślnego ekportu
+    <p>Instrukcje <code>import</code> odwołujące się do pliku <mark>CommonJS</mark> mogą używać tylko domyślnego
+      eksportu
     </p>
-    <pre class="language-javascript"><code>import _ from 'commonjs-package'</code></pre>
+    <code>import _ from 'commonjs-package'</code>
     <p class="note next">To jest w toku i może się zmienić w przyszłości.</p>
   </section>
 
   <section class="slide compact prism">
     <p>Dynamiczne wyrażenie <code>import()</code> może być używane do importowania <mark>modułów ES</mark>
       z plików <mark>modułu CommonJS</mark> lub <mark>ES</mark></p>
-    <pre class="language-javascript">
+    <pre class="language-javascript" style="overflow: hidden;">
       <code>
           (async () => {
             // Załaduj moduł ECMASCript
@@ -166,18 +167,19 @@
     <p>
       <code>import.meta.url</code> dostarcza adres URL bieżącego modułu ES
     </p>
-    <pre class="language-javascript">
+    <pre class="language-javascript" style="overflow: hidden;">
       <code>
           console.log(import.meta.url);
           // Wynik => file:///C:/Projekty/warsaw.js-new-esm/index.mjs
       </code>
     </pre>
+    <p class="next"><mark>Moduły ECMASCript</mark> ładowane są w trybie ścisłym, gdzie <mark>CommonJS</mark> wymaga
+      dodania dyrektywy <code>'use strict'</code></p>
   </section>
 
   <section class="slide compact">
-    <p><mark>Moduły ECMASCript</mark> ładowane są w trybie ścisłym, gdzie <mark>CommonJS</mark> wymaga
-      dodania dyrektywy <code>“use strict”</code></p>
-    <p class="next">
+    <h2>Rozszerzenie <mark>.mjs</mark></h2>
+    <p>
       Pliki kończące się na <mark>.mjs</mark> są jawnie traktowane jako <mark>moduły ECMASCript</mark>
       w instrukcjach <b>importu</b> i podczas uruchamiania za pomocą komendy <b>node</b>.
     </p>
@@ -213,7 +215,7 @@
       wyjścia:
     </p>
     <ul class="next">
-      <li>możesz nadać im rozszerznie <mark>cjs</mark></li>
+      <li>możesz nadać im rozszerzenie <mark>cjs</mark></li>
       <li class="next">lub umieścić je w subfolderze zawierającym plik <mark>package.json</mark> z polem
         <code>"type":"commonjs"</code> pod którym wszystkie pliki <mark>js</mark> będą traktowane jak
         <mark>CommonJS</mark>
@@ -273,7 +275,7 @@
     <ul class="next">
       <li>dla plików <mark>JSON</mark> i <mark>natywnych modułow</mark> - <code>module.createRequireFromPath()</code>
       </li>
-      <li>tylko dla plików <mark>JSON</mark> mamy ekperymentalne wsparcie po przez flagę
+      <li>tylko dla plików <mark>JSON</mark> mamy eksperymentalne wsparcie po przez flagę
         <mark>--experimental-json-modules</mark></li>
     </ul>
   </section>
@@ -281,7 +283,7 @@
   <section class="slide compact prism">
     <p>Użycie plików <mark>CommonJS</mark>, <mark>JSON</mark> oraz <mark>natywnych modułów</mark> po przez
       <code>module.createRequireFromPath()</code></p>
-    <pre class="language-javascript">
+    <pre class="language-javascript" style="overflow: hidden;">
         <code>
             import { createRequireFromPath as createRequire } from 'module';
             import { fileURLToPath as fromURL } from 'url';
@@ -290,10 +292,6 @@
             
             const packageConfig = require('./package.json');
             console.log(packageConfig); // { type: 'module' }
-
-
-
-            //
         </code>
       </pre>
   </section>
@@ -308,7 +306,7 @@
     <p class="note">To jest praca w toku i może ulec zmianie.</p>
     <p class="next">
       Możemy utworzyć pakiet zawierający pliki ECMASCript, używając pola <mark>"main"</mark>
-      w pliku <mark>package.json</mark>.
+      w pliku <mark>package.json</mark> wskazującego na plik ECMASCript.
     </p>
     <p class="next">
       Node.js będzie wiedział, jak załadować go jako moduł ECMASCript,
@@ -322,8 +320,41 @@
     <img class="cover" src="images/run-es-package.png" alt="" />
   </section>
 
+
+  <section class="slide compact">
+    <h2>Plan wyjścia</h2>
+    <p>Planowane usprawnienia przed zdjęciem flagi <mark>--experimental-modules</mark>:
+      <ul>
+        <li class="next">Możliwość ładowania tego samego pakietu do modułu CommonJS przez <code>require</code>
+          lub <code>import</code> do modułu ECMASCript</li>
+        <li class="next">Łatwiejsze użycie <code>require</code> w modułach ECMASCript</li>
+        <li class="next">Mapy ścieżek pakietów
+          <code>import sdk from 'some-service/sdk'</code></br>
+          <code>//'some-service/sdk':'./src/sdk/public-api.mjs'</code>
+        </li>
+        <li class="next">Automatyczna detekcja typu modułu</li>
+        <li class="next">Usunięcie flagi <mark>--expermintal-modules</mark> w październiku 2019 </li>
+      </ul>
+    </p>
+  </section>
+
+  <section class="slide compact">
+    <h2>Linki</h2>
+    <ul>
+      <li><a href="https://github.com/nodejs/modules">Modules Team</a></li>
+      <li><a href="https://github.com/nodejs/modules/blob/master/doc/announcement.md">Announcing a new
+          --experimental-modules</a></li>
+      <li><a href="https://github.com/nodejs/modules/blob/master/doc/plan-for-new-modules-implementation.md">Plan for
+          New Modules Implementation</a></li>
+      <li><a href="https://hacks.mozilla.org/2018/03/es-modules-a-cartoon-deep-dive/">ES modules: A cartoon
+          deep-dive</a></li>
+      <li><a href="https://tc39.github.io/ecma262/#sec-modules">ECMAScript modules - the official standard</a></li>
+      <li><a href="https://github.com/nodejs/modules/issues/300">GitHub issue - Flags functionality options</a></li>
+    </ul>
+  </section>
+
   <section class="slide">
-    <h3 class="shout">See you next month at WarsawJS</h3>
+    <h3 class="shout">Dziękuję</h3>
   </section>
 
   <div class="progress"></div>
